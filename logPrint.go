@@ -11,7 +11,7 @@ import (
 var LogLevel string = "debug"
 
 //logleve D--> DEBUG,I-->INFO,W-->WARN,E-->ERROR
-//日志默认全部显示，使用时若不想显示某级别的日志，则可将对应全局变量LogLevel=debug|info|warn|eror,默认debug
+//日志默认全部显示，使用时若不想显示某级别的日志，则可将对应全局变量LogLevel=debug|info|warn|eror,默认debug级别
 func JetLog(logleve string, args ...interface{}) {
 	switch LogLevel {
 	case "debug":
