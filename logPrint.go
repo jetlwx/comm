@@ -13,38 +13,56 @@ var LogLevel string = "debug"
 //logleve D--> DEBUG,I-->INFO,W-->WARN,E-->ERROR
 //日志默认全部显示，使用时若不想显示某级别的日志，则可将对应全局变量LogLevel=debug|info|warn|eror,默认debug级别
 func JetLog(logleve string, args ...interface{}) {
-	switch logleve {
-	case "D":
-	case "I":
-		if LogLevel == "debug" {
-			return
-		}
-	case "W":
-		if LogLevel == "info" || LogLevel == "debug" {
-			return
-		}
-	case "E":
-		if LogLevel == "info" || LogLevel == "debug" || LogLevel == "warn" {
-			return
-		}
-	default:
-		return
-	}
-	// switch LogLevel {
-	// case "debug":
-	// case "info":
-	// 	if logleve == "D" {
-	// 		return
+	// switch logleve {
+	// case "D":
+	// 	if LogLevel == "debug" || LogLevel == "info" || LogLevel == "error" || LogLevel == "warn" {
+	// 		goto SHOWLOG
 	// 	}
-	// case "warn":
-	// 	if logleve == "D" || logleve == "I" {
-	// 		return
+	// 	return
+	// case "I":
+	// 	if LogLevel == "info" || LogLevel == "error" || LogLevel == "warn" {
+	// 		goto SHOWLOG
 	// 	}
-	// case "error":
+	// 	return
+	// case "W":
+	// 	if LogLevel == "warn" || LogLevel == "error" {
+	// 		goto SHOWLOG
+	// 	}
+	// 	return
+	// case "E":
+	// 	if LogLevel == "error" {
+	// 		goto SHOWLOG
+	// 	}
+	// 	return
+
 	// default:
 	// 	return
 	// }
-
+	switch LogLevel {
+	case "debug":
+		if logleve == "D" || logleve == "I" || logleve == "W" || logleve == "E" {
+			goto SHOWLOG
+		}
+		return
+	case "info":
+		if logleve == "I" || logleve == "W" || logleve == "E" {
+			goto SHOWLOG
+		}
+		return
+	case "warn":
+		if logleve == "W" || logleve == "E" {
+			goto SHOWLOG
+		}
+		return
+	case "error":
+		if logleve == "E" {
+			goto SHOWLOG
+		}
+		return
+	default:
+		return
+	}
+SHOWLOG:
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
 		log.Println("log print faild")
