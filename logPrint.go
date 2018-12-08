@@ -13,20 +13,37 @@ var LogLevel string = "debug"
 //logleve D--> DEBUG,I-->INFO,W-->WARN,E-->ERROR
 //日志默认全部显示，使用时若不想显示某级别的日志，则可将对应全局变量LogLevel=debug|info|warn|eror,默认debug级别
 func JetLog(logleve string, args ...interface{}) {
-	switch LogLevel {
-	case "debug":
-	case "info":
-		if logleve == "D" {
+	switch logleve {
+	case "D":
+	case "I":
+		if LogLevel == "debug" {
 			return
 		}
-	case "warn":
-		if logleve == "D" || logleve == "I" {
+	case "W":
+		if LogLevel == "info" || LogLevel == "debug" {
 			return
 		}
-	case "error":
+	case "E":
+		if LogLevel == "info" || LogLevel == "debug" || LogLevel == "warn" {
+			return
+		}
 	default:
 		return
 	}
+	// switch LogLevel {
+	// case "debug":
+	// case "info":
+	// 	if logleve == "D" {
+	// 		return
+	// 	}
+	// case "warn":
+	// 	if logleve == "D" || logleve == "I" {
+	// 		return
+	// 	}
+	// case "error":
+	// default:
+	// 	return
+	// }
 
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
