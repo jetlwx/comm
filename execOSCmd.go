@@ -10,7 +10,7 @@ import (
 	"github.com/sebastianwebber/cmdr"
 )
 
-//执行系统命令，errstr为空时则返回正常结果，当timeout =true时，timeoutNum值生效
+//执行系统命令，errstr为空时则返回正常结果，当timeout =true时，timeoutNum值生效,
 func ExecOSCmd(cmdstr string, timeout bool, timeoutNum int) (res string, errstr string) {
 	str := strings.Split(cmdstr, " ")
 	cmd := cmdr.New(true, str[0], str[1:]...)

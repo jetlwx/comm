@@ -115,6 +115,16 @@ func PathExists(path string) error {
 	return err
 }
 
+//创建目录
+func CreateDir(path string, mode os.FileMode) error {
+	//nil is exists
+	if err := PathExists(path); err == nil {
+		return nil
+	}
+	return os.Mkdir(path, mode)
+
+}
+
 //文件类型是否文本
 func (fdp FileORDirPath) FileType() bool {
 	cmd := "/usr/bin/file " + " " + fdp.Path
@@ -187,4 +197,10 @@ func AppendToFileEnd(filename, content string) error {
 	_, err = f.WriteAt([]byte(content), n)
 
 	return err
+}
+
+//直接写文件,如果文件不存在，则直接创建，如果已存在，则先删除以前的文件，再写
+func WriteFileRecover(filename, content string) error {
+	data := []byte(content)
+	return ioutil.WriteFile(filename, data, 0644)
 }
