@@ -22,8 +22,9 @@ import (
 
 func main() {
 	wx := weixinAPI.CorpInfo{}
-	wx.CorpID = "wxda8ff3f444b720ae"
-	wx.CorpSecret = "iv4J641a81eYeXYPKXCsWaFq"
+	wx.CorpID = "wx8XXXXXXXX"
+	wx.CorpSecret = "iXXXXXXXXxXYPKXC"
+	//
 	msg := weixinAPI.SendMsg{}
 	msg.Touser = "@all"
 	msg.Agentid = 1 //乐有家监控应用ID为1
