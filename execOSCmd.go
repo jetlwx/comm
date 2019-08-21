@@ -3,12 +3,55 @@ package comm
 import (
 	"bytes"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/sebastianwebber/cmdr"
 )
+
+func ExecOSCmdNew(command string, killInMilliSeconds time.Duration) (okResult bool, stdout, stderr string) {
+	str := strings.Split(command, " ")
+	cmd := exec.Command(str[0], str[1:]...)
+	//cmd := exec.Command("/usr/sbin/nginx", "-t")
+	var outbuf, errbuf bytes.Buffer
+	cmd.Stdout = &outbuf
+	cmd.Stderr = &errbuf
+
+	okResult = true
+
+	err := cmd.Start()
+	done := make(chan error, 1)
+	go func() {
+		done <- cmd.Wait()
+	}()
+	isKilled := false
+	select {
+	case <-time.After(killInMilliSeconds * time.Millisecond):
+		if err := cmd.Process.Kill(); err != nil {
+			okResult = false
+		} else {
+			isKilled = true
+		}
+	case err := <-done:
+
+		if err != nil {
+			//	log.Printf("process done with error = %v", err)
+			okResult = false
+		}
+	}
+	if err != nil {
+		log.Fatal(err)
+		okResult = false
+	}
+
+	if isKilled && errbuf.String() == "" {
+		return false, outbuf.String(), "执行超时"
+	}
+	return okResult, outbuf.String(), errbuf.String()
+}
 
 //执行系统命令，errstr为空时则返回正常结果，当timeout =true时，timeoutNum值生效,
 func ExecOSCmd(cmdstr string, timeout bool, timeoutNum int) (res string, errstr string) {
