@@ -19,10 +19,24 @@ var (
 	Jlog = new(jlog)
 )
 
+func (j *jlog) level(logleve string) int {
+	switch logleve {
+	case "debug":
+		return 0
+	case "info":
+		return 1
+	case "warn":
+		return 2
+	case "error":
+		return 3
+	default:
+		return 0
+	}
+}
 func (j *jlog) Debug(args ...interface{}) {
 	color := string([]byte{27, 91, 51, 55, 109})
 	reset := string([]byte{27, 91, 48, 109})
-	if LogLevel == "debug" || LogLevel == "info" || LogLevel == "warn" || LogLevel == "error" {
+	if j.level(LogLevel) == 0 {
 		j.showlog("D", color, reset, args...)
 	}
 
@@ -31,31 +45,30 @@ func (j *jlog) Debug(args ...interface{}) {
 func (j *jlog) Info(args ...interface{}) {
 	color := string([]byte{27, 91, 51, 50, 109})
 	reset := string([]byte{27, 91, 48, 109})
-	if LogLevel == "info" || LogLevel == "warn" || LogLevel == "error" {
-		j.showlog("D", color, reset, args...)
+	if j.level(LogLevel) <= 1 {
+		j.showlog("I", color, reset, args...)
 	}
 
 }
 func (j *jlog) Warn(args ...interface{}) {
 	color := string([]byte{27, 91, 51, 51, 109})
 	reset := string([]byte{27, 91, 48, 109})
-	if LogLevel == "warn" || LogLevel == "error" {
-		j.showlog("D", color, reset, args...)
+	if j.level(LogLevel) <= 2 {
+		j.showlog("W", color, reset, args...)
 	}
 
 }
 func (j *jlog) Error(args ...interface{}) {
 	color := string([]byte{27, 91, 51, 49, 109})
 	reset := string([]byte{27, 91, 48, 109})
-	if LogLevel == "error" {
+	if j.level(LogLevel) <= 3 {
 		j.showlog("E", color, reset, args...)
 	}
 
 }
 
 func (j *jlog) showlog(loglevel, color, reset string, args ...interface{}) {
-	//pc, file, line, ok := runtime.Caller(1)
-	_, file, line, ok := runtime.Caller(1)
+	_, file, line, ok := runtime.Caller(2)
 	if !ok {
 		log.Println(color, "log print faild", reset)
 	}
